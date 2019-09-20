@@ -48,6 +48,7 @@ class DownloadUtil{
 		try{
 			s = this.HttpsGetWithoutCert(url);
 		} catch( Exception ex){
+			ex.printStackTrace()
 			return false;
 		}
 		
