@@ -224,7 +224,7 @@ class DownloadUtil{
 			HttpEntity entity = response.getEntity()
 			System.out.println(response.getStatusLine())
 			result = IOUtils.toString(entity.getContent())
-			//EntityUtils.consume(entity)
+			EntityUtils.consume(entity)
 		}catch(Exception ex){
 			throw ex
 		}
