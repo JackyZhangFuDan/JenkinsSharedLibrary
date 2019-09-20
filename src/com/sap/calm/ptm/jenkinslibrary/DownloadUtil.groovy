@@ -179,6 +179,7 @@ class DownloadUtil{
 		def connection = null
 		connection = ur.openConnection()
 		connection.requestMethod = 'GET'
+		println connection.content.text
 		
 		if (connection.responseCode == 200) {
 			String s = "";
