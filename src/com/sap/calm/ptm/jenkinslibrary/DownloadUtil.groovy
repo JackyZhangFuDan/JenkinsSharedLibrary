@@ -99,6 +99,58 @@ class DownloadUtil{
 		
 		return true;
 		
+		/*
+		//download the file
+		def nullTrustManager = [
+			checkClientTrusted: { chain, authType ->  },
+			checkServerTrusted: { chain, authType ->  },
+			getAcceptedIssuers: { null }
+		]
+		
+		def nullHostnameVerifier = [
+			verify: { hostname, session ->
+				true
+			}
+		]
+		javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("SSL")
+		sc.init(null, [nullTrustManager as  javax.net.ssl.X509TrustManager] as  javax.net.ssl.X509TrustManager[], null)
+		javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory())
+		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(nullHostnameVerifier as javax.net.ssl.HostnameVerifier)
+		
+		def ur = new URL(url)
+		def connection = null
+		try{
+			connection = ur.openConnection()
+			connection.requestMethod = 'GET'
+		}catch(Exception ex){
+			println 'Download fail, there is exception when opening the url, '+ex.getMessage()
+			return false;
+		}
+		if (connection.responseCode == 200) {
+			String s = "";
+			connection.getInputStream().withReader('utf-8'){reader ->
+				s = reader.getText();
+				targetFile.withWriter('utf-8'){ writer ->
+					writer.write(s)
+				};
+			}
+			
+			//print some helpful information
+			//println connection.content.text
+			//println connection.contentEncoding
+			println 'type of the downloaded content: ' + connection.contentType
+			println 'last modify timestamp of the content: ' + connection.lastModified
+			println 'HTTP header of the response: '
+			connection.headerFields.each { 
+				println "> ${it}"
+			}
+			
+		} else {
+			println 'download fail, the http reponse code isn''t 200: ' + connection.responseCode
+			return false
+		}
+		return true
+		*/
 	}
 	
 	private def String HttpsGetWithoutCert(String url) throws Exception {
@@ -120,10 +172,12 @@ class DownloadUtil{
 		javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory())
 		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(nullHostnameVerifier as javax.net.ssl.HostnameVerifier)
 		
+		
 		def ur = new URL(url)
 		def connection = null
 		connection = ur.openConnection()
 		connection.requestMethod = 'GET'
+		println connection.content.text
 		
 		if (connection.responseCode == 200) {
 			String s = "";
