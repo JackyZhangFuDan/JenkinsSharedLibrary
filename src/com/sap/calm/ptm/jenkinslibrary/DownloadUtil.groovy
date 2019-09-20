@@ -157,6 +157,7 @@ class DownloadUtil{
 	
 	
 	private def String HttpsGetWithoutCert(String url) throws Exception {
+		println 'Url to be downloaded: ' + url
 		
 		def nullTrustManager = [
 			checkClientTrusted: { chain, authType ->  },
@@ -169,7 +170,7 @@ class DownloadUtil{
 				true
 			}
 		]
-		javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("SSL")
+		javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("TLSv1")
 		sc.init(null, [nullTrustManager as  javax.net.ssl.X509TrustManager] as  javax.net.ssl.X509TrustManager[], null)
 		javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory())
 		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(nullHostnameVerifier as javax.net.ssl.HostnameVerifier)
@@ -186,6 +187,7 @@ class DownloadUtil{
 			}
 			return s;
 		} else {
+			
 			return 'download fail, the http reponse code is not 200: ' + connection.responseCode
 		}
 		
