@@ -30,14 +30,15 @@ class DownloadUtil{
 	 * it only considers the result created in the specified date
 	 * @return
 	 */
-	def boolean downloadFromJenkins(String jenkinsServer, String jobName, Date date, String folderOfCurrentWorkspace, String relativePathOfToBeDownloadedFile){
+	def String downloadFromJenkins(String jenkinsServer, String jobName, Date date, String folderOfCurrentWorkspace, String relativePathOfToBeDownloadedFile){
 		SimpleDateFormat sdf = new SimpleDateFormat('yyyyMMdd')
 		String targetDateStr = sdf.format(date)
 		
 		File targetFolder = new File(folderOfCurrentWorkspace);
 		if(!targetFolder.exists() || !targetFolder.isDirectory()){
 			println 'The specified target folder does not exist.'
-			return false;
+			return 'The specified target folder does not exist.'
+			//return false;
 		}else{
 			FileTreeBuilder targetFolderBuilder = new FileTreeBuilder(targetFolder)
 			targetFolder = targetFolderBuilder.dir("downloadedTestResult")
@@ -48,8 +49,8 @@ class DownloadUtil{
 		try{
 			s = this.HttpsGetWithoutCert(url);
 		} catch( Exception ex){
-			ex.printStackTrace()
-			return false;
+			return ex.getMessage();
+			//return false;
 		}
 		
 		def jsonSlurper = new JsonSlurper()
@@ -77,7 +78,7 @@ class DownloadUtil{
 			this.download(url, targetFolder,jobName+'_'+build.number+'_resultfile')
 		})
 		
-		return true
+		return 'download is done!'
 	}
 	
 	private def boolean download(String url, File targetFolder, String fileName){
