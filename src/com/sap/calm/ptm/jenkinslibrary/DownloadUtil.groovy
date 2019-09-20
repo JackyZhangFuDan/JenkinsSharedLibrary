@@ -34,7 +34,7 @@ class DownloadUtil{
 		SimpleDateFormat sdf = new SimpleDateFormat('yyyyMMdd')
 		String targetDateStr = sdf.format(date)
 		
-		File targetFolder = new File(folderOfCurrentWorkspace);
+		File targetFolder = new File(folderOfCurrentWorkspace)
 		if(!targetFolder.exists() || !targetFolder.isDirectory()){
 			println 'The specified target folder does not exist.'
 			return 'The specified target folder does not exist.'
@@ -49,13 +49,13 @@ class DownloadUtil{
 		try{
 			s = this.HttpsGetWithoutCert(url);
 		} catch( Exception ex){
-			return ex.getMessage();
-			//return false;
+			ex.printStackTrace()
+			return ex.getMessage()
 		}
 		
 		def jsonSlurper = new JsonSlurper()
-		def jobJsonObject = jsonSlurper.parseText(s);
-		ArrayList jobBuilds = jobJsonObject.builds;
+		def jobJsonObject = jsonSlurper.parseText(s)
+		ArrayList jobBuilds = jobJsonObject.builds
 		ArrayList toBeDownloadedBuilds = new ArrayList()
 		
 		//which builds to download?
@@ -83,8 +83,7 @@ class DownloadUtil{
 	
 	private def boolean download(String url, File targetFolder, String fileName){
 		
-		File targetFile = new File(targetFolder, fileName);
-		
+		File targetFile = new File(targetFolder, fileName)
 		
 		String s = ""
 		try{
@@ -203,7 +202,7 @@ class DownloadUtil{
 			}
 			).build()
 		
-		String[] ps = ["SSL","TLS","TLSv1","TLSv1.1","TLSv1.2"]
+		String[] ps = ['TLSv1','TLSv1.1','TLSv1.2']
 		SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(
 				sslcontext,
 				ps,
@@ -227,7 +226,6 @@ class DownloadUtil{
 			result = IOUtils.toString(entity.getContent())
 			//EntityUtils.consume(entity)
 		}catch(Exception ex){
-			response.close()
 			throw ex
 		}
 		
