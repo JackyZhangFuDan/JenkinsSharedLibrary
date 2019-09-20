@@ -44,7 +44,13 @@ class DownloadUtil{
 		}
 		
 		String url = jenkinsServer + '/job/' + jobName + '/api/json'
-		String s = this.HttpsGetWithoutCert(url)
+		String s = ""
+		try{
+			s = this.HttpsGetWithoutCert(url);
+		} catch( Exception ex){
+			return false;
+		}
+		
 		def jsonSlurper = new JsonSlurper()
 		def jobJsonObject = jsonSlurper.parseText(s);
 		ArrayList jobBuilds = jobJsonObject.builds;
@@ -131,38 +137,41 @@ class DownloadUtil{
 	
 	private def String HttpsGetWithoutCert(String url) throws Exception {
 		SSLContext sslcontext = SSLContexts.custom()
-				.loadTrustMaterial(new TrustStrategy() {
-					//ignore checking server's certification
-					public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-						return true;
-					}
-				})
-				.build()
+			.loadTrustMaterial(new TrustStrategy() {
+				//ignore checking server's certification
+				public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+					return true;
+				}
+			}
+			).build()
 		
 		String[] ps = ["TLSv1","TLSv1.1","TLSv1.2"]
 		SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(
 				sslcontext,
 				ps,
 				null,
-				SSLConnectionSocketFactory.getDefaultHostnameVerifier())
+				SSLConnectionSocketFactory.getDefaultHostnameVerifier()
+		)
 		
 		CloseableHttpClient httpclient = HttpClients.custom()
-				.setSSLSocketFactory(sslConnectionSocketFactory)
-				.build()
+			.setSSLSocketFactory(sslConnectionSocketFactory)
+			.build()
  
 		HttpGet httpget = new HttpGet(url)
 		
 		System.out.println("Executing request " + httpget.getRequestLine())
 		CloseableHttpResponse response = httpclient.execute(httpget)
+		String result = ""
 		try {
 			HttpEntity entity = response.getEntity()
 			System.out.println(response.getStatusLine())
-			String result = IOUtils.toString(entity.getContent())
-			return result
+			result = IOUtils.toString(entity.getContent())
 			//EntityUtils.consume(entity)
 		}catch(Exception ex){
 			response.close()
 			throw ex
 		}
+		
+		return result
 	}
 }
