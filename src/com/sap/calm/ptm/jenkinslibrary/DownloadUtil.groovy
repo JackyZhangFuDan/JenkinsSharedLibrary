@@ -85,6 +85,7 @@ class DownloadUtil{
 		
 		File targetFile = new File(targetFolder, fileName);
 		
+		/*
 		String s = ""
 		try{
 			s = this.HttpsGetWithoutCert(url)
@@ -98,13 +99,30 @@ class DownloadUtil{
 		};
 		
 		return true;
+		*/
 		
-		/*
 		//download the file
-		def url = new URL(this.url)
+		def nullTrustManager = [
+			checkClientTrusted: { chain, authType ->  },
+			checkServerTrusted: { chain, authType ->  },
+			getAcceptedIssuers: { null }
+		]
+		
+		def nullHostnameVerifier = [
+			verify: { hostname, session ->
+				//true
+				hostname.startsWith('yuml.me')
+			}
+		]
+		javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("SSL")
+		sc.init(null, [nullTrustManager as  javax.net.ssl.X509TrustManager] as  javax.net.ssl.X509TrustManager[], null)
+		javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory())
+		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(nullHostnameVerifier as javax.net.ssl.HostnameVerifier)
+		
+		def ur = new URL(url)
 		def connection = null
 		try{
-			connection = url.openConnection()
+			connection = ur.openConnection()
 			connection.requestMethod = 'GET'
 		}catch(Exception ex){
 			println 'Download fail, there is exception when opening the url, '+ex.getMessage()
@@ -114,7 +132,7 @@ class DownloadUtil{
 			String s = "";
 			connection.getInputStream().withReader('utf-8'){reader ->
 				s = reader.getText();
-				new File(this.folder, this.fileName).withWriter('utf-8'){ writer ->
+				targetFile.withWriter('utf-8'){ writer ->
 					writer.write(s)
 				};
 			}
@@ -130,12 +148,13 @@ class DownloadUtil{
 			}
 			
 		} else {
-			println 'download fail, the http reponse code isn''t 200: ' + connnection.responseCode
+			println 'download fail, the http reponse code isn''t 200: ' + connection.responseCode
 			return false
 		}
 		return true
-		*/
 	}
+	
+	
 	
 	private def String HttpsGetWithoutCert(String url) throws Exception {
 		SSLContext sslcontext = SSLContexts.custom()
