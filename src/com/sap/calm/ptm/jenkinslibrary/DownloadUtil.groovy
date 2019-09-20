@@ -175,13 +175,12 @@ class DownloadUtil{
 		sc.init(null, [nullTrustManager as  javax.net.ssl.X509TrustManager] as  javax.net.ssl.X509TrustManager[], null)
 		javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory())
 		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(nullHostnameVerifier as javax.net.ssl.HostnameVerifier)
-		*/
+		
 		
 		def ur = new URL(url)
 		def connection = null
 		connection = ur.openConnection()
 		connection.requestMethod = 'GET'
-		println connection.content.text
 		
 		if (connection.responseCode == 200) {
 			String s = "";
@@ -193,8 +192,8 @@ class DownloadUtil{
 			
 			return 'download fail, the http reponse code is not 200: ' + connection.responseCode
 		}
+		*/
 		
-		/*
 		SSLContext sslcontext = SSLContexts.custom()
 			.loadTrustMaterial(new TrustStrategy() {
 				//ignore checking server's certification
@@ -204,7 +203,7 @@ class DownloadUtil{
 			}
 			).build()
 		
-		String[] ps = ["TLSv1","TLSv1.1","TLSv1.2"]
+		String[] ps = ["SSL","TLS","TLSv1","TLSv1.1","TLSv1.2"]
 		SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(
 				sslcontext,
 				ps,
@@ -233,6 +232,5 @@ class DownloadUtil{
 		}
 		
 		return result
-		*/
 	}
 }
