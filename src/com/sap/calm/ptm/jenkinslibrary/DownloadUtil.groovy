@@ -85,7 +85,7 @@ class DownloadUtil{
 		
 		File targetFile = new File(targetFolder, fileName);
 		
-		/*
+		
 		String s = ""
 		try{
 			s = this.HttpsGetWithoutCert(url)
@@ -99,8 +99,8 @@ class DownloadUtil{
 		};
 		
 		return true;
-		*/
 		
+		/*
 		//download the file
 		def nullTrustManager = [
 			checkClientTrusted: { chain, authType ->  },
@@ -110,8 +110,7 @@ class DownloadUtil{
 		
 		def nullHostnameVerifier = [
 			verify: { hostname, session ->
-				//true
-				hostname.startsWith('yuml.me')
+				true
 			}
 		]
 		javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("SSL")
@@ -152,11 +151,45 @@ class DownloadUtil{
 			return false
 		}
 		return true
+		*/
 	}
 	
 	
 	
 	private def String HttpsGetWithoutCert(String url) throws Exception {
+		
+		def nullTrustManager = [
+			checkClientTrusted: { chain, authType ->  },
+			checkServerTrusted: { chain, authType ->  },
+			getAcceptedIssuers: { null }
+		]
+		
+		def nullHostnameVerifier = [
+			verify: { hostname, session ->
+				true
+			}
+		]
+		javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("SSL")
+		sc.init(null, [nullTrustManager as  javax.net.ssl.X509TrustManager] as  javax.net.ssl.X509TrustManager[], null)
+		javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory())
+		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(nullHostnameVerifier as javax.net.ssl.HostnameVerifier)
+		
+		def ur = new URL(url)
+		def connection = null
+		connection = ur.openConnection()
+		connection.requestMethod = 'GET'
+		
+		if (connection.responseCode == 200) {
+			String s = "";
+			connection.getInputStream().withReader('utf-8'){reader ->
+				s = reader.getText();
+			}
+			return s;
+		} else {
+			return 'download fail, the http reponse code is not 200: ' + connection.responseCode
+		}
+		
+		/*
 		SSLContext sslcontext = SSLContexts.custom()
 			.loadTrustMaterial(new TrustStrategy() {
 				//ignore checking server's certification
@@ -195,5 +228,6 @@ class DownloadUtil{
 		}
 		
 		return result
+		*/
 	}
 }
