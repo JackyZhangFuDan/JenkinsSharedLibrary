@@ -107,7 +107,7 @@ class DownloadUtil{
 			ex.printStackTrace()
 			return false
 		}
-		
+		println 'Content to be saved: '+s
 		targetFile.withWriter('utf-8'){ writer ->
 			writer.write(s)
 		};
