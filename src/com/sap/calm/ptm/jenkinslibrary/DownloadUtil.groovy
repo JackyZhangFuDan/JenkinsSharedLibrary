@@ -230,7 +230,6 @@ class DownloadUtil{
 		HttpGet httpget = new HttpGet(url)
 		
 		System.out.println("Executing request " + httpget.getRequestLine())
-		httpclient.execute(httpget)
 		CloseableHttpResponse response = httpclient.execute(httpget)
 		String result = ""
 		try {
@@ -246,6 +245,6 @@ class DownloadUtil{
 	}
 	
 	public boolean testAccessHTTP(String url, String folder){
-		this.download(url, new File(folder), 'bytestdownloadfromhttp.txt')
+		return this.download(url, new File(folder), 'bytestdownloadfromhttp.txt')
 	}
 }
