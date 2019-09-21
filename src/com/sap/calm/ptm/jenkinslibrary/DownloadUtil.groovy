@@ -6,17 +6,28 @@ import javax.net.ssl.SSLContext
 import java.text.SimpleDateFormat
 import java.nio.charset.StandardCharsets
 
-//@Grab('commons-io:commons-io:2.5')
+@Grab('commons-io:commons-io:2.5')
 import org.apache.commons.io.IOUtils
+
+@Grab('org.apache.httpcomponents:httpclient:4.5.6')
 import org.apache.http.HttpEntity
-import org.apache.http.client.methods.CloseableHttpResponse
-import org.apache.http.client.methods.HttpGet
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory
-import org.apache.http.conn.ssl.TrustStrategy
-import org.apache.http.impl.client.CloseableHttpClient
-import org.apache.http.impl.client.HttpClients
+@Grab('org.apache.httpcomponents:httpclient:4.5.6')
 import org.apache.http.ssl.SSLContexts
+@Grab('org.apache.httpcomponents:httpclient:4.5.6')
 import org.apache.http.util.EntityUtils
+
+@Grab('org.apache.httpcomponents:httpcore:4.4.10')
+import org.apache.http.client.methods.CloseableHttpResponse
+@Grab('org.apache.httpcomponents:httpcore:4.4.10')
+import org.apache.http.client.methods.HttpGet
+@Grab('org.apache.httpcomponents:httpcore:4.4.10')
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory
+@Grab('org.apache.httpcomponents:httpcore:4.4.10')
+import org.apache.http.conn.ssl.TrustStrategy
+@Grab('org.apache.httpcomponents:httpcore:4.4.10')
+import org.apache.http.impl.client.CloseableHttpClient
+@Grab('org.apache.httpcomponents:httpcore:4.4.10')
+import org.apache.http.impl.client.HttpClients
 
 import groovy.json.JsonSlurper
 
@@ -159,6 +170,7 @@ class DownloadUtil{
 	private def String HttpsGetWithoutCert(String url) throws Exception {
 		println 'Url to be downloaded: ' + url
 		
+		/*
 		def nullTrustManager = [
 			checkClientTrusted: { chain, authType ->  },
 			checkServerTrusted: { chain, authType ->  },
@@ -188,10 +200,10 @@ class DownloadUtil{
 			println s;
 			return s;
 		} else {	
-			return 'download fail, the http reponse code is not 200: ' + connection.responseCode
+			return 'download fail, the http reponse code is not 200: ' + responseCode
 		}
+		*/
 		
-		/*
 		SSLContext sslcontext = SSLContexts.custom()
 			.loadTrustMaterial(new TrustStrategy() {
 				//ignore checking server's certification
@@ -229,7 +241,6 @@ class DownloadUtil{
 		}
 		
 		return result
-		*/
 	}
 	
 	public boolean testAccessHTTP(String url, String folder){
