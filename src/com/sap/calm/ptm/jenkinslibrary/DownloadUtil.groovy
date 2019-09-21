@@ -50,7 +50,6 @@ class DownloadUtil{
 		if(!targetFolder.exists() || !targetFolder.isDirectory()){
 			String msg = 'The specified target folder does not exist.'
 			return msg
-			//return false;
 		}else{
 			FileTreeBuilder targetFolderBuilder = new FileTreeBuilder(targetFolder)
 			targetFolder = targetFolderBuilder.dir("downloadedTestResult")
@@ -95,10 +94,17 @@ class DownloadUtil{
 	
 	/**
 	 * Download one test result file from the specified URL, save it to the specified file 
+	 * 
+	 * @param url
+	 * @param targetFolder
+	 * @param fileName
+	 * @return
 	 */
 	private def boolean download(String url, File targetFolder, String fileName){
 		
-		File targetFile = new File(targetFolder, fileName)
+		//create new file to save the download content
+		FileTreeBuilder targetFolderBuilder = new FileTreeBuilder(targetFolder)
+		def targetFile = targetFolderBuilder.file(fileName)
 		
 		String s = ""
 		try{
@@ -107,104 +113,24 @@ class DownloadUtil{
 			ex.printStackTrace()
 			return false
 		}
-		println 'Content to be saved: '+s
+		
 		targetFile.withWriter('utf-8'){ writer ->
 			writer.write(s)
 		};
 		
 		return true;
-		
-		/*
-		//download the file
-		def nullTrustManager = [
-			checkClientTrusted: { chain, authType ->  },
-			checkServerTrusted: { chain, authType ->  },
-			getAcceptedIssuers: { null }
-		]
-		
-		def nullHostnameVerifier = [
-			verify: { hostname, session ->
-				true
-			}
-		]
-		javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("SSL")
-		sc.init(null, [nullTrustManager as  javax.net.ssl.X509TrustManager] as  javax.net.ssl.X509TrustManager[], null)
-		javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory())
-		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(nullHostnameVerifier as javax.net.ssl.HostnameVerifier)
-		
-		def ur = new URL(url)
-		def connection = null
-		try{
-			connection = ur.openConnection()
-			connection.requestMethod = 'GET'
-		}catch(Exception ex){
-			println 'Download fail, there is exception when opening the url, '+ex.getMessage()
-			return false;
-		}
-		if (connection.responseCode == 200) {
-			String s = "";
-			connection.getInputStream().withReader('utf-8'){reader ->
-				s = reader.getText();
-				targetFile.withWriter('utf-8'){ writer ->
-					writer.write(s)
-				};
-			}
-			
-			//print some helpful information
-			//println connection.content.text
-			//println connection.contentEncoding
-			println 'type of the downloaded content: ' + connection.contentType
-			println 'last modify timestamp of the content: ' + connection.lastModified
-			println 'HTTP header of the response: '
-			connection.headerFields.each { 
-				println "> ${it}"
-			}
-			
-		} else {
-			println 'download fail, the http reponse code isn''t 200: ' + connection.responseCode
-			return false
-		}
-		return true
-		*/
 	}
 	
+	/**
+	 * read content from one url, this is basis of other methods which like to download data
+	 * 
+	 * @param url
+	 * @return
+	 * @throws Exception
+	 */
 	@NonCPS
 	private def String HttpsGetWithoutCert(String url) throws Exception {
 		println 'Url to be downloaded: ' + url
-		
-		/*
-		def nullTrustManager = [
-			checkClientTrusted: { chain, authType ->  },
-			checkServerTrusted: { chain, authType ->  },
-			getAcceptedIssuers: { null }
-		]
-		
-		def nullHostnameVerifier = [
-			verify: { hostname, session ->
-				true
-			}
-		]
-		javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("SSL")
-		sc.init(null, [nullTrustManager as  javax.net.ssl.X509TrustManager] as  javax.net.ssl.X509TrustManager[], null)
-		javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory())
-		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(nullHostnameVerifier as javax.net.ssl.HostnameVerifier)
-		
-		def ur = new URL(url)
-		def connection = ur.openConnection()
-		connection.requestMethod = 'GET'
-		def responseCode = connection.responseCode
-		
-		if (responseCode == 200) {
-			String s = "";
-			connection.getInputStream().withReader('utf-8'){reader ->
-				s = reader.getText();
-			}
-			println s;
-			return s;
-		} else {	
-			return 'download fail, the http reponse code is not 200: ' + responseCode
-		}
-		*/
 		
 		SSLContext sslcontext = SSLContexts.custom()
 			.loadTrustMaterial(new TrustStrategy() {
