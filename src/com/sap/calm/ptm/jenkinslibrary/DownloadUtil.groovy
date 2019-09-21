@@ -36,8 +36,8 @@ class DownloadUtil{
 		
 		File targetFolder = new File(folderOfCurrentWorkspace)
 		if(!targetFolder.exists() || !targetFolder.isDirectory()){
-			println 'The specified target folder does not exist.'
-			return 'The specified target folder does not exist.'
+			String msg = 'The specified target folder does not exist.'
+			return msg
 			//return false;
 		}else{
 			FileTreeBuilder targetFolderBuilder = new FileTreeBuilder(targetFolder)
@@ -81,6 +81,9 @@ class DownloadUtil{
 		return 'download is done!'
 	}
 	
+	/**
+	 * Download one test result file from the specified URL, save it to the specified file 
+	 */
 	private def boolean download(String url, File targetFolder, String fileName){
 		
 		File targetFile = new File(targetFolder, fileName)
@@ -167,23 +170,22 @@ class DownloadUtil{
 				true
 			}
 		]
-		javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("TLSv1")
+		javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("SSL")
 		sc.init(null, [nullTrustManager as  javax.net.ssl.X509TrustManager] as  javax.net.ssl.X509TrustManager[], null)
 		javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory())
 		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(nullHostnameVerifier as javax.net.ssl.HostnameVerifier)
 		
-		
 		def ur = new URL(url)
-		def connection = null
-		connection = ur.openConnection()
+		def connection = ur.openConnection()
 		connection.requestMethod = 'GET'
-		println connection.content.text
+		def responseCode = connection.responseCode
 		
-		if (connection.responseCode == 200) {
+		if (responseCode == 200) {
 			String s = "";
 			connection.getInputStream().withReader('utf-8'){reader ->
 				s = reader.getText();
 			}
+			println s;
 			return s;
 		} else {	
 			return 'download fail, the http reponse code is not 200: ' + connection.responseCode
@@ -196,8 +198,8 @@ class DownloadUtil{
 				public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
 					return true;
 				}
-			}
-			).build()
+			})
+			.build()
 		
 		String[] ps = ['TLSv1','TLSv1.1','TLSv1.2']
 		SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(
