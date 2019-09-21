@@ -231,4 +231,8 @@ class DownloadUtil{
 		return result
 		*/
 	}
+	
+	public boolean testAccessHTTP(String url, String folder){
+		this.download(url, new File(folder), 'bytestdownloadfromhttp.txt')
+	}
 }
