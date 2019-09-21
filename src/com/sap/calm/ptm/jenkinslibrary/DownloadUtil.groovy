@@ -209,6 +209,7 @@ class DownloadUtil{
 		SSLContext sslcontext = SSLContexts.custom()
 			.loadTrustMaterial(new TrustStrategy() {
 				//ignore checking server's certification
+				@NonCPS
 				public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
 					return true;
 				}
