@@ -100,6 +100,7 @@ class DownloadUtil{
 	 * @param fileName
 	 * @return
 	 */
+	@NonCPS
 	private def boolean download(String url, File targetFolder, String fileName){
 		
 		//create new file to save the download content
