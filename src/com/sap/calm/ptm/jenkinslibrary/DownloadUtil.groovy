@@ -5,6 +5,7 @@ import java.security.cert.X509Certificate
 import javax.net.ssl.SSLContext
 import java.text.SimpleDateFormat
 import java.nio.charset.StandardCharsets
+import com.cloudbees.groovy.cps.NonCPS
 
 @Grab('commons-io:commons-io:2.5')
 import org.apache.commons.io.IOUtils
@@ -167,6 +168,7 @@ class DownloadUtil{
 		*/
 	}
 	
+	@NonCPS
 	private def String HttpsGetWithoutCert(String url) throws Exception {
 		println 'Url to be downloaded: ' + url
 		
