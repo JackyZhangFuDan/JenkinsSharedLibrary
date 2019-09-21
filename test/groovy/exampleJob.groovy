@@ -11,9 +11,17 @@ def execute() {
         }
         stage("Middle") {
             DownloadUtil util = new DownloadUtil()
-            println util.downloadFromJenkins('https://gkecalmdevshanghai.jaas-gcp.cloud.sap.corp', 'PTM_CN_FRAME_UI',new Date(1568611787631),pwd(),'artifact/target/frame/UT/coverage/IE%2011.0.0%20(Windows%2010.0.0)/node_modules/karma-qunit/lib/index.html')
-			util.testAccessHTTP('https://www.baidu.com','C:\\Users\\i042102\\Downloads')
+            
+			List<String> result = util.downloadFromJenkins(
+				'https://gkecalmdevshanghai.jaas-gcp.cloud.sap.corp', //server of the jenkins
+				'PTM_CN_FRAME_UI',                                    //job name
+				new Date(1568611787631),                              //which date's builds of this job will be downloaded 
+				pwd(),                                                //save to which folder of the server?
+				'artifact/target/frame/UT/coverage/IE%2011.0.0%20(Windows%2010.0.0)/node_modules/karma-qunit/lib/index.html')
 			
+			result.forEach({line ->
+				println line
+			})
         }
 		
         stage("Last") {

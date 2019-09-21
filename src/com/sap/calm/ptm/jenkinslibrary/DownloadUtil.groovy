@@ -34,34 +34,44 @@ import groovy.json.JsonSlurper
 
 class DownloadUtil{
 	
+	private static String DOWNLOADSUBFOLDER = 'pds_download_folder'
 	def DownloadUtil(){
 	}
 	
 	/**
 	 * Downlaod test results of the specified job from another jenkins server, 
-	 * it only considers the result created in the specified date
-	 * @return
+	 * it only considers the result created in the specified date 
+	 * 
+	 * @param jenkinsServer
+	 * @param jobName
+	 * @param date
+	 * @param folderOfCurrentWorkspace
+	 * @param relativePathOfToBeDownloadedFile
+	 * @return: URI of the downloaded file
 	 */
-	def String downloadFromJenkins(String jenkinsServer, String jobName, Date date, String folderOfCurrentWorkspace, String relativePathOfToBeDownloadedFile){
+	def List<String> downloadFromJenkins(String jenkinsServer, String jobName, Date date, String folderOfCurrentWorkspace, String relativePathOfToBeDownloadedFile){
 		SimpleDateFormat sdf = new SimpleDateFormat('yyyyMMdd')
 		String targetDateStr = sdf.format(date)
 		
+		List<String> downloadedFiles = new ArrayList<String>()
+		
 		File targetFolder = new File(folderOfCurrentWorkspace)
 		if(!targetFolder.exists() || !targetFolder.isDirectory()){
-			String msg = 'The specified target folder does not exist.'
-			return msg
+			println 'The specified target folder does not exist.'
+			return downloadedFiles
 		}else{
 			FileTreeBuilder targetFolderBuilder = new FileTreeBuilder(targetFolder)
-			targetFolder = targetFolderBuilder.dir("downloadedTestResult")
+			targetFolder = targetFolderBuilder.dir(DOWNLOADSUBFOLDER)
 		}
 		
+		//what builds the job had produced in the specified date
 		String url = jenkinsServer + '/job/' + jobName + '/api/json'
 		String s = ""
 		try{
-			s = this.HttpsGetWithoutCert(url);
+			s = this.HttpsGetWithoutCert(url)
 		} catch( Exception ex){
 			ex.printStackTrace()
-			return ex.getMessage()
+			return downloadedFiles
 		}
 		
 		def jsonSlurper = new JsonSlurper()
@@ -69,7 +79,7 @@ class DownloadUtil{
 		ArrayList jobBuilds = jobJsonObject.builds
 		ArrayList toBeDownloadedBuilds = new ArrayList()
 		
-		//which builds to download?
+		//calculates which builds to download?
 		jobBuilds.each( { build ->
 			try{
 				s = this.HttpsGetWithoutCert(build.url + "/api/json")
@@ -79,17 +89,18 @@ class DownloadUtil{
 					toBeDownloadedBuilds.add(build);
 				}
 			}catch(Exception ex){
-				
 			}
 		})
 		
 		//download the builds
 		toBeDownloadedBuilds.each({ build ->
 			url = build.url + relativePathOfToBeDownloadedFile
-			this.download(url, targetFolder,jobName+'_'+build.number+'_resultfile')
+			String fileName = targetDateStr + '_' + jobName + '_' + build.number + '_resultfile'
+			this.download(url, targetFolder, fileName)
+			downloadedFiles.add(DOWNLOADSUBFOLDER + '/' + fileName)
 		})
 		
-		return 'download is done!'
+		return downloadedFiles
 	}
 	
 	/**
