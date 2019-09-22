@@ -1,7 +1,7 @@
 package com.sap.calm.ptm.jenkinslibrary
 
 import com.sap.calm.ptm.jenkinslibrary.PDSNotificationBuilder
-//import com.sap.calm.ptm.jenkinslibrary.PDSNotificationBuilder.PDSNotification
+import com.sap.calm.ptm.jenkinslibrary.PDSNotification
 
 class PDSNotificationUtil {
 	public static boolean notifyPDS(
@@ -24,7 +24,7 @@ class PDSNotificationUtil {
 			}
 		}
 		
-		PDSNotificationBuilder.PDSNotification notification = notifBuilder.build()
+		PDSNotification notification = notifBuilder.build()
 		return notification.send()
 	}
 }
