@@ -34,8 +34,8 @@ def execute() {
 		stage('Archive Files'){
 			archiveArtifacts artifacts: DownloadUtil.DOWNLOADSUBFOLDER + '/**'
 			echo 'Downloaded fileds are archived, they are putted to folder ' + DownloadUtil.DOWNLOADSUBFOLDER + ' which is subfolder of build"s archieve folder'
-	   }
-	   stage('Notify PDS'){
+	    }
+	    stage('Notify PDS'){
 			boolean notiResult = PDSNotificationUtil.notifyPDS(
 				'calmptm', 
 				'project', 
@@ -56,7 +56,7 @@ def execute() {
 			}else{
 				echo 'Send Notification fail'
 			}
-	   }
+	    }
     }
 	
 }
