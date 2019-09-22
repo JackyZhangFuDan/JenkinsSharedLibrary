@@ -19,7 +19,7 @@ class PDSNotificationUtil {
 		
 		if(files != null && !files.empty){
 			for(int i = 0; i < files.size(); i++){
-				println files.get(i)
+				//println files.get(i)
 				notifBuilder.addFile(files.get(i).format,files.get(i).url);
 			}
 		}

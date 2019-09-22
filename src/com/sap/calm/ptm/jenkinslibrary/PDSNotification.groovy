@@ -47,7 +47,7 @@ class PDSNotification{
 	public String job
 	public String build
 	public String category
-	public List<ResultFile> files
+	public List files
 	
 	public String whenTestRun
 	
@@ -57,7 +57,7 @@ class PDSNotification{
 	
 	public boolean send(){
 		if(!this.validate()){
-			println 'validation before sending fail.'
+			println 'validation before sending fail, notification sending is cancelled.'
 			return false
 		}
 		def jsonStr = JsonOutput.toJson([
@@ -68,7 +68,7 @@ class PDSNotification{
 			job:this.job,
 			build:this.build,
 			category:this.category,
-			whenTestRun:this.whenTestRun,
+			whentestrun:this.whenTestRun,
 			files:this.files
 		])
 		println 'Json data to be sent to PDS: ' + jsonStr
@@ -157,9 +157,5 @@ class PDSNotification{
 		
 	}
 	
-	class ResultFile{
-		public String format
-		public String url
-	}
 }
 	

@@ -46,8 +46,7 @@ def execute() {
 				'1',
 				new Date(),
 				[
-					[format:'jacoco', url:'http://www.google.com'],
-					[format:'jacoco', url:'http://www.baidu.com']
+					[format:'ut_jacoco', url:'job/PTM_CN_Project_JAVA/1/artifact/srv/target/site/jacoco/jacoco.xml']
 				]
 			)
 			

@@ -142,7 +142,6 @@ class DownloadUtil{
 	 */
 	@NonCPS
 	private def String HttpsGetWithoutCert(String url) throws Exception {
-		println 'Url to be downloaded: ' + url
 		
 		SSLContext sslcontext = SSLContexts.custom()
 			.loadTrustMaterial(new TrustStrategy() {

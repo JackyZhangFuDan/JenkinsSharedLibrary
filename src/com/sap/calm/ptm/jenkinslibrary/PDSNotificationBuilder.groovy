@@ -37,7 +37,7 @@ public class PDSNotificationBuilder{
 		this.notification.type = serverType
 		this.notification.category = category
 		
-		this.notification.files = new ArrayList<ResultFile>()
+		this.notification.files = new ArrayList()
 	}
 	
 	public def PDSNotificationBuilder jobName(String jobName){
@@ -57,10 +57,7 @@ public class PDSNotificationBuilder{
 	}
 	
 	public PDSNotificationBuilder addFile(String format, String relativeUrl){
-		ResultFile f = new ResultFile()
-		f.format = format
-		f.url = relativeUrl
-		this.notification.files.add(f)
+		this.notification.files.add([format:format, url:relativeUrl])
 		return this;
 	}
 	
@@ -70,11 +67,6 @@ public class PDSNotificationBuilder{
 		}else{
 			return null;
 		}
-	}
-	
-	class ResultFile{
-		public String format
-		public String url
 	}
 	
 }
