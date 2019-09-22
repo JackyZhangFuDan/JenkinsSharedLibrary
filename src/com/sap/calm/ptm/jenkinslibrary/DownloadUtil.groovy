@@ -165,7 +165,7 @@ class DownloadUtil{
 		CloseableHttpClient httpclient = HttpClients.custom()
 			.setSSLSocketFactory(sslConnectionSocketFactory)
 			.build()
- 
+  
 		HttpGet httpget = new HttpGet(url)
 		
 		System.out.println("Executing request " + httpget.getRequestLine())
