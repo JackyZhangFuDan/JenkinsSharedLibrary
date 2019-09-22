@@ -34,7 +34,7 @@ import groovy.json.JsonSlurper
 
 class DownloadUtil{
 	
-	private static String DOWNLOADSUBFOLDER = 'pds_download_folder'
+	public static String DOWNLOADSUBFOLDER = 'pds_download_folder'
 	def DownloadUtil(){
 	}
 	

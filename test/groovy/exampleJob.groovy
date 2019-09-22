@@ -16,16 +16,21 @@ def execute() {
 				'https://gkecalmdevshanghai.jaas-gcp.cloud.sap.corp', //server of the jenkins
 				'PTM_CN_FRAME_UI',                                    //job name
 				new Date(1568611787631),                              //which date's builds of this job will be downloaded 
-				pwd(),                                                //save to which folder of the server?
+				"${WORKSPACE}",                                       //save to which folder of the server?
 				'artifact/target/frame/UT/coverage/IE%2011.0.0%20(Windows%2010.0.0)/node_modules/karma-qunit/lib/index.html')
 			
+			echo 'Downloaded files: '
 			result.forEach({line ->
 				println line
 			})
+			
+			echo "Current workspace: ${WORKSPACE}"
         }
 		
-        stage("Last") {
-            echo "We're done"
+        stage("Post") {
+			echo 'Downloaded fileds are archived. ' + DownloadUtil.DOWNLOADSUBFOLDER
+			archiveArtifacts artifacts: DownloadUtil.DOWNLOADSUBFOLDER + '/**'
+			
         }
     }
 	
