@@ -39,6 +39,8 @@ import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 
 class PDSNotification{
+	//private String pdsNotificationEndPoint = 'https://projectdashboarddaemon-test.cfapps.sap.hana.ondemand.com/api/v1/send'
+	private String pdsNotificationEndPoint = 'https://solmancf1-approuter-pds.cfapps.sap.hana.ondemand.com/pdd/api/v1/send'
 	
 	public String pdsUsername
 	public String pdsPwd
@@ -78,7 +80,7 @@ class PDSNotification{
 		println 'Json data to be sent to PDS: ' + jsonStr
 		
 		try{
-			this.httpsPostData('https://solmancf1-approuter-pds.cfapps.sap.hana.ondemand.com/pdd/api/v1/send', jsonStr)
+			this.httpsPostData(this.pdsNotificationEndPoint, jsonStr)
 		}catch(Exception ex){
 			ex.printStackTrace()
 			return false
@@ -143,26 +145,31 @@ class PDSNotification{
 	    httppost.setHeader("Accept", "application/json");
 	    httppost.setHeader("Content-type", "application/json");
 		
-		UsernamePasswordCredentials creds = new UsernamePasswordCredentials("JohnSnow", "Solman00")
+		UsernamePasswordCredentials creds = new UsernamePasswordCredentials(this.pdsUsername, this.pdsPwd)
 		httppost.addHeader(new BasicScheme().authenticate(creds, httppost, null));
 		
 		CloseableHttpResponse response = httpclient.execute(httppost)
 		
+		int respCode = response.getStatusLine().getStatusCode();
+		if(respCode < 200 || respCode >= 300){
+			println 'PDS Daemon returns non-health http code: ' + respCode
+			return false
+		}
+		
 		try {
 			println response.getStatusLine()
 			HttpEntity respEntity = response.getEntity()
-			//println respEntity.getContent()
+			String jsonResp = EntityUtils.toString(respEntity,"UTF-8")
+			def resp = (new JsonSlurper()).parseText(jsonResp)			
 			
 			EntityUtils.consume(respEntity)
+			
+			if(resp.code != 0){
+				println 'PDS Daemon rejects the notification: ' + jsonResp 
+				return false
+			}
 		}catch(Exception ex){
 			throw ex
-		}
-		
-		int respCode = response.getStatusLine().getStatusCode();
-		if(respCode >= 200 && respCode < 300){
-			return true
-		}else{
-			return false
 		}
 		
 	}

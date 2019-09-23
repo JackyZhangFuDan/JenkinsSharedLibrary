@@ -8,7 +8,7 @@ import com.sap.calm.ptm.jenkinslibrary.PDSNotificationUtil
 def execute() {
     node() {
 		DownloadUtil downloadUtil
-		String username = 'JohnSnow'
+		String username = 'JonSnow'
 		String password = 'Solman00'
 		
         stage("First") {
