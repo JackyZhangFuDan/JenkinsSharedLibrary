@@ -63,6 +63,16 @@ public class PDSNotificationBuilder{
 		return this;
 	}
 	
+	public PDSNotificationBuilder testMode(boolean test){
+		if(test){
+			this.notification.pdsNotificationEndPoint = 'https://projectdashboarddaemon-test.cfapps.sap.hana.ondemand.com/api/v1/send'
+		}else{
+			this.notification.pdsNotificationEndPoint = 'https://solmancf1-approuter-pds.cfapps.sap.hana.ondemand.com/pdd/api/v1/send'
+		}
+		println "PDS notification will be sent to endpoint ${this.notification.pdsNotificationEndPoint}"
+		return this
+	}
+	
 	public PDSNotification build(){
 		if(this.notification.validate()){
 			return this.notification

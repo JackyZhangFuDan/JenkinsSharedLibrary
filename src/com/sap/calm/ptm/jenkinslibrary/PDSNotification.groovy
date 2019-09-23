@@ -40,7 +40,7 @@ import groovy.json.JsonOutput
 
 class PDSNotification{
 	//private String pdsNotificationEndPoint = 'https://projectdashboarddaemon-test.cfapps.sap.hana.ondemand.com/api/v1/send'
-	private String pdsNotificationEndPoint = 'https://solmancf1-approuter-pds.cfapps.sap.hana.ondemand.com/pdd/api/v1/send'
+	public String pdsNotificationEndPoint = 'https://solmancf1-approuter-pds.cfapps.sap.hana.ondemand.com/pdd/api/v1/send'
 	
 	public String pdsUsername
 	public String pdsPwd

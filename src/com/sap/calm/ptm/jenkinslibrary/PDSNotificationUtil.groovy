@@ -6,7 +6,7 @@ import com.sap.calm.ptm.jenkinslibrary.PDSNotification
 class PDSNotificationUtil {
 	public static boolean notifyPDS(
 		String project, String module, String server, String serverType, String category, 
-		String jobName, String buildId, Date whenTestRun, List files, String username, String pwd){
+		String jobName, String buildId, Date whenTestRun, List files, String username, String pwd, boolean testMode){
 		
 		PDSNotificationBuilder notifBuilder = new PDSNotificationBuilder(
 			project, 
@@ -17,7 +17,7 @@ class PDSNotificationUtil {
 			username,  
 			pwd
 		)
-		notifBuilder.jobName(jobName).jobBuildId(buildId).whenTestRun(whenTestRun)
+		notifBuilder.jobName(jobName).jobBuildId(buildId).whenTestRun(whenTestRun).testMode(testMode)
 		
 		if(files != null && !files.empty){
 			for(int i = 0; i < files.size(); i++){
