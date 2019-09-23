@@ -39,6 +39,10 @@ import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 
 class PDSNotification{
+	
+	public String pdsUsername
+	public String pdsPwd
+	
 	public String project
 	public String module
 	public String server
@@ -84,6 +88,12 @@ class PDSNotification{
 	}
 	
 	private boolean validate(){
+		if(this.pdsUsername == null || this.pdsUsername.isEmpty()){
+			return false
+		}
+		if(this.pdsPwd == null || this.pdsPwd.isEmpty()){
+			return false
+		}
 		if(this.project == null || this.project.isEmpty()){
 			return false;
 		}

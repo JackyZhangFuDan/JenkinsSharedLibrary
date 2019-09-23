@@ -8,8 +8,10 @@ import com.sap.calm.ptm.jenkinslibrary.PDSNotificationUtil
 def execute() {
     node() {
 		DownloadUtil downloadUtil
+		String username = 'JohnSnow'
+		String password = 'Solman00'
+		
         stage("First") {
-            echo "Something"
             downloadUtil = new DownloadUtil()
         }
         stage("Middle") {
@@ -47,7 +49,10 @@ def execute() {
 				new Date(),
 				[
 					[format:'ut_jacoco', url:'job/PTM_CN_Project_JAVA/1/artifact/srv/target/site/jacoco/jacoco.xml']
-				]
+				],
+				
+				username,
+				password
 			)
 			
 			if(notiResult){
@@ -58,10 +63,6 @@ def execute() {
 	    }
     }
 	
-}
-
-def pwd(){
-	return 'C:\\Users\\i042102\\Downloads'
 }
 
 return this

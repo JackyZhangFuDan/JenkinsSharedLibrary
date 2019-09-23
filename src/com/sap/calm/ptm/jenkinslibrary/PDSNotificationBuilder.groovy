@@ -30,14 +30,16 @@ import groovy.json.JsonOutput
 public class PDSNotificationBuilder{
 	private PDSNotification notification = new PDSNotification();
 	
-	public PDSNotificationBuilder(String project, String module, String server, String serverType, String category){
+	public PDSNotificationBuilder(String project, String module, String server, String serverType, String category, String username, String pwd){
 		this.notification.project = project
 		this.notification.module = module
 		this.notification.server = server
 		this.notification.type = serverType
 		this.notification.category = category
-		
 		this.notification.files = new ArrayList()
+		
+		this.notification.pdsUsername = username
+		this.notification.pdsPwd = pwd
 	}
 	
 	public def PDSNotificationBuilder jobName(String jobName){

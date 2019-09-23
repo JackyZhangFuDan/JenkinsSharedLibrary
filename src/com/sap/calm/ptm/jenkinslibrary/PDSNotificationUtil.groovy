@@ -6,14 +6,16 @@ import com.sap.calm.ptm.jenkinslibrary.PDSNotification
 class PDSNotificationUtil {
 	public static boolean notifyPDS(
 		String project, String module, String server, String serverType, String category, 
-		String jobName, String buildId, Date whenTestRun, List files){
+		String jobName, String buildId, Date whenTestRun, List files, String username, String pwd){
 		
 		PDSNotificationBuilder notifBuilder = new PDSNotificationBuilder(
 			project, 
 			module, 
 			server, 
 			serverType, 
-			category
+			category,
+			username,  
+			pwd
 		)
 		notifBuilder.jobName(jobName).jobBuildId(buildId).whenTestRun(whenTestRun)
 		
