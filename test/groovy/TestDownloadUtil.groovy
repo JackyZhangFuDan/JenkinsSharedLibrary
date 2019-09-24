@@ -27,6 +27,10 @@ class TestDownloadUtil extends BasePipelineTest {
 		setScriptExtension('groovy')
 
 		binding.setVariable('WORKSPACE', 'C:\\Users\\i042102\\Downloads')
+		binding.setVariable('BUILD_URL', 'http://localhost:8080/dummypipeline/1/')
+		binding.setVariable('BUILD_ID', '1')
+		binding.setVariable('JENKINS_URL', 'http://localhost:8080/')
+		binding.setVariable('JOB_NAME', 'rc_pipeline_Master')
 		
 		super.setUp()
 	}

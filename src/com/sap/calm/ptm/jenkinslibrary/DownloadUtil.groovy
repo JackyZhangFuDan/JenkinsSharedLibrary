@@ -26,6 +26,18 @@ class DownloadUtil{
 	public static def List<String> downloadFromOtherJenkins(String jenkinsServer, String jobName, Date date, String folderOfCurrentWorkspace, String relativePathOfToBeDownloadedFile){
 		JenkinsDownloader loader = new JenkinsDownloader(jenkinsServer,folderOfCurrentWorkspace,DOWNLOADSUBFOLDER)
 		return loader.downloadFromJenkins(jobName, date , relativePathOfToBeDownloadedFile)
+		
+	}
+	
+	public static def Map prepareDataForNotification(String project, String module, String category, String fileFormat, List<String> files, String urlPrefix){
+		if(files == null || files.size() == 0) return []
+		
+		List fs = []
+		for(int i = 0 ; i < files.size(); i++){
+			Map file = [format: fileFormat, url: urlPrefix + '/' + files.get(i)]
+			fs.add(file)
+		}
+		return [project: project, module: module, category:category, files: fs]
 	}
 	
 	/**
