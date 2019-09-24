@@ -7,12 +7,11 @@ import com.sap.calm.ptm.jenkinslibrary.PDSNotificationUtil
 
 def execute() {
     node() {
-		DownloadUtil downloadUtil
 		String username = 'JonSnow'
 		String password = 'Solman00'
 		
-        stage("First") {
-            downloadUtil = new DownloadUtil()
+        stage("Prepare") {
+            //downloadUtil = new DownloadUtil()
         }
         stage("Middle") {
             
@@ -26,7 +25,7 @@ def execute() {
 				"${WORKSPACE}",                                       //save to which folder of the server?
 				'artifact/target/frame/UT/coverage/IE%2011.0.0%20(Windows%2010.0.0)/node_modules/karma-qunit/lib/index.html')
 			*/
-			List<String> result = downloadUtil.downloadFromJenkins(
+			List<String> result = DownloadUtil.downloadFromOtherJenkins(
 				'https://gketestpipeline.jaas-gcp.cloud.sap.corp', //server of the jenkins
 				'rc_pipeline_Master',                                    //job name
 				dateToBeDownloaded,                              //which date's builds of this job will be downloaded
