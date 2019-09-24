@@ -28,4 +28,28 @@ class DownloadUtil{
 		return loader.downloadFromJenkins(jobName, date , relativePathOfToBeDownloadedFile)
 	}
 	
+	/**
+	 * Delete the specified folder and all its sub objects
+	 * 
+	 * @param folder
+	 * @return
+	 */
+	public static def boolean clearTmpFolder(String parent){
+		File folder = new File(parent)
+		
+		if(folder.exists() && folder.isDirectory()){
+			File targetDir = null
+			folder.eachDirRecurse{directory->
+				if(directory.name.equals(DOWNLOADSUBFOLDER)){
+					targetDir = directory
+				}
+			}
+			if(targetDir != null){
+				targetDir.deleteDir()
+			}
+			return true
+		}else{
+			return false
+		}
+	}
 }

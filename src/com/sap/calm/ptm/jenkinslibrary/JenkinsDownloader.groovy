@@ -96,7 +96,15 @@ class JenkinsDownloader{
 		//download the builds
 		toBeDownloadedBuilds.each({ build ->
 			url = build.url + relativePathOfToBeDownloadedFile
-			String fileName = targetDateStr + '_' + jobName + '_' + build.number + '_resultfile'
+			String[] path = relativePathOfToBeDownloadedFile.split('/')
+			
+			String fileName = targetDateStr + '_' + jobName + '_' + build.number 
+			if(path != null && path.length > 0){
+				fileName = fileName + '_' + path[path.length - 1]
+			}else{
+				fileName = fileName + '_unknown'
+			}
+			
 			this.download(url, targetFolder, fileName)
 			downloadedFiles.add(saveToSubFolder + '/' + fileName)
 		})
@@ -183,7 +191,4 @@ class JenkinsDownloader{
 		return result
 	}
 	
-	public boolean testAccessHTTP(String url, String folder){
-		return this.download(url, new File(folder), 'bytestdownloadfromhttp.txt')
-	}
 }

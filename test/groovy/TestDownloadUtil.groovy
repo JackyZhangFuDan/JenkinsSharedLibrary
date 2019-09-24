@@ -26,7 +26,7 @@ class TestDownloadUtil extends BasePipelineTest {
 		setScriptRoots([ 'src', 'vars', 'test/groovy' ] as String[])
 		setScriptExtension('groovy')
 
-		binding.setVariable('WORKSPACE', 'C:\\Users\\i042102\\.jenkins\\workspace')
+		binding.setVariable('WORKSPACE', 'C:\\Users\\i042102\\Downloads')
 		
 		super.setUp()
 	}
