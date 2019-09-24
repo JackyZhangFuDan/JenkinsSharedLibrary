@@ -38,14 +38,12 @@ class DownloadUtil{
 		File folder = new File(parent)
 		
 		if(folder.exists() && folder.isDirectory()){
-			File targetDir = null
-			folder.eachDirRecurse{directory->
-				if(directory.name.equals(DOWNLOADSUBFOLDER)){
-					targetDir = directory
-				}
-			}
-			if(targetDir != null){
+			File targetDir = new File(folder.absolutePath + File.separatorChar + DOWNLOADSUBFOLDER)
+			
+			if(targetDir.exists()){
 				targetDir.deleteDir()
+			}else{
+				println "folder ${targetDir.path} doesn't exist"
 			}
 			return true
 		}else{
