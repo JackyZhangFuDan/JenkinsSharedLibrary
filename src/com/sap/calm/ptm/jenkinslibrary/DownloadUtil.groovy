@@ -7,8 +7,6 @@ import java.text.SimpleDateFormat
 import java.nio.charset.StandardCharsets
 import com.cloudbees.groovy.cps.NonCPS
 
-
-
 import com.sap.calm.ptm.jenkinslibrary.JenkinsDownloader
 
 class DownloadUtil{
