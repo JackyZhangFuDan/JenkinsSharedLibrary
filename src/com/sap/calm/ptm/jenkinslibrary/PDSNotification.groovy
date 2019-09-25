@@ -7,32 +7,21 @@ import java.text.SimpleDateFormat
 import java.nio.charset.StandardCharsets
 import com.cloudbees.groovy.cps.NonCPS
 
-@Grab('commons-io:commons-io:2.5')
 import org.apache.commons.io.IOUtils
 
-@Grab('org.apache.httpcomponents:httpclient:4.5.6')
 import org.apache.http.HttpEntity
-@Grab('org.apache.httpcomponents:httpclient:4.5.6')
 import org.apache.http.ssl.SSLContexts
-@Grab('org.apache.httpcomponents:httpclient:4.5.6')
 import org.apache.http.util.EntityUtils
 
 import org.apache.http.auth.UsernamePasswordCredentials
 import org.apache.http.impl.auth.BasicScheme
 
-@Grab('org.apache.httpcomponents:httpcore:4.4.10')
 import org.apache.http.client.methods.CloseableHttpResponse
-@Grab('org.apache.httpcomponents:httpcore:4.4.10')
 import org.apache.http.client.methods.HttpPost
-@Grab('org.apache.httpcomponents:httpcore:4.4.10')
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory
-@Grab('org.apache.httpcomponents:httpcore:4.4.10')
 import org.apache.http.conn.ssl.TrustStrategy
-@Grab('org.apache.httpcomponents:httpcore:4.4.10')
 import org.apache.http.impl.client.CloseableHttpClient
-@Grab('org.apache.httpcomponents:httpcore:4.4.10')
 import org.apache.http.impl.client.HttpClients
-@Grab('org.apache.httpcomponents:httpcore:4.4.10')
 import org.apache.http.entity.StringEntity
 
 import groovy.json.JsonSlurper

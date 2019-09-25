@@ -128,7 +128,6 @@ class JenkinsDownloader{
 		
 		//create new file to save the download content
 		FileTreeBuilder targetFolderBuilder = new FileTreeBuilder(targetFolder)
-		def targetFile = targetFolderBuilder.file(fileName)
 		
 		String s = ""
 		try{
@@ -138,6 +137,7 @@ class JenkinsDownloader{
 			return false
 		}
 		if(s != null && !s.isEmpty()){
+			def targetFile = targetFolderBuilder.file(fileName)
 			targetFile.withWriter('utf-8'){ writer ->
 				writer.write(s)
 			};
