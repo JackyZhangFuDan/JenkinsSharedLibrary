@@ -105,8 +105,11 @@ class JenkinsDownloader{
 				fileName = fileName + '_unknown'
 			}
 			
-			this.download(url, targetFolder, fileName)
-			downloadedFiles.add(saveToSubFolder + '/' + fileName)
+			if(this.download(url, targetFolder, fileName)){
+				downloadedFiles.add(saveToSubFolder + '/' + fileName)
+			}else{
+				println "download file ${fileName} fail"
+			}
 		})
 		
 		return downloadedFiles
@@ -134,10 +137,13 @@ class JenkinsDownloader{
 			ex.printStackTrace()
 			return false
 		}
-		
-		targetFile.withWriter('utf-8'){ writer ->
-			writer.write(s)
-		};
+		if(s != null && !s.isEmpty()){
+			targetFile.withWriter('utf-8'){ writer ->
+				writer.write(s)
+			};
+		}else{
+			return false;
+		}
 		
 		return true;
 	}
@@ -178,14 +184,20 @@ class JenkinsDownloader{
 		
 		System.out.println("Executing request " + httpget.getRequestLine())
 		CloseableHttpResponse response = httpclient.execute(httpget)
+		int respCode = response.getStatusLine().getStatusCode();
+		
 		String result = ""
-		try {
-			HttpEntity entity = response.getEntity()
-			System.out.println(response.getStatusLine())
-			result = IOUtils.toString(entity.getContent())
-			EntityUtils.consume(entity)
-		}catch(Exception ex){
-			throw ex
+		if(respCode < 200 || respCode >= 300){
+			println 'Get non-health http code: ' + respCode
+		}else{
+			try {
+				HttpEntity entity = response.getEntity()
+				System.out.println(response.getStatusLine())
+				result = IOUtils.toString(entity.getContent())
+				EntityUtils.consume(entity)
+			}catch(Exception ex){
+				throw ex
+			}
 		}
 		
 		return result
