@@ -23,13 +23,13 @@ class DownloadUtil{
 	 * @param relativePathOfToBeDownloadedFile
 	 * @return: URI of the downloaded file
 	 */
-	public static def List<String> downloadFromOtherJenkins(String jenkinsServer, String jobName, Date date, String folderOfCurrentWorkspace, String relativePathOfToBeDownloadedFile){
+	public static List<String> downloadFromOtherJenkins(String jenkinsServer, String jobName, Date date, String folderOfCurrentWorkspace, String relativePathOfToBeDownloadedFile){
 		JenkinsDownloader loader = new JenkinsDownloader(jenkinsServer,folderOfCurrentWorkspace,DOWNLOADSUBFOLDER)
 		return loader.downloadFromJenkins(jobName, date , relativePathOfToBeDownloadedFile)
 		
 	}
 	
-	public static def Map prepareDataForNotification(String project, String module, String category, String fileFormat, List<String> files, String urlPrefix){
+	public static Map prepareDataForNotification(String project, String module, String category, String fileFormat, List<String> files, String urlPrefix){
 		if(files == null || files.size() == 0) return []
 		
 		List fs = []
@@ -41,12 +41,22 @@ class DownloadUtil{
 	}
 	
 	/**
+	 * Sometimes we need to verify if a path or folder exist, make an utility
+	 * @param path
+	 * @return
+	 */
+	public static boolean fileOrFolderExists(String path){
+		File file = new File(path)
+		return file.exists()
+	} 
+	
+	/**
 	 * Delete the specified folder and all its sub objects
 	 * 
 	 * @param folder
 	 * @return
 	 */
-	public static def boolean clearTmpFolder(String parent){
+	public static boolean clearTmpFolder(String parent){
 		File folder = new File(parent)
 		
 		if(folder.exists() && folder.isDirectory()){
