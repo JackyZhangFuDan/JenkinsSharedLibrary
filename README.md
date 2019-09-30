@@ -27,7 +27,7 @@ This method will send notification to PDS, it deals with the complexity of handl
 That's all the important interfaces that pipeline needs to use. DownloadUtil also has the other couple of handy methods.
 
 ## Setup environment
-Nothing to do, just clone this project and import it into your eclipse.
+Beside installing Groovy's Eclipse plugin, nothing to do additionally, just clone this project and import it into your eclipse.
 
 Develop Jenkins' shared library can be painful without quick test way, deploying to local jenkins just complex for testing your code change, the best solution is using **Jenkins Unit Test Framework**. My project has integrated it.  
 The test pipeline script: test/groovy/exampleJob.groovy
