@@ -30,7 +30,7 @@ class DownloadUtil{
 	}
 	
 	public static Map prepareDataForNotification(String project, String module, String category, String fileFormat, List<String> files, String urlPrefix){
-		if(files == null || files.size() == 0) return []
+		if(files == null || files.size() == 0) return null
 		
 		List fs = []
 		for(int i = 0 ; i < files.size(); i++){

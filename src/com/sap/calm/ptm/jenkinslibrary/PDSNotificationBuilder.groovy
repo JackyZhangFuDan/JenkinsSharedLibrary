@@ -42,6 +42,11 @@ public class PDSNotificationBuilder{
 		this.notification.pdsPwd = pwd
 	}
 	
+	public def PDSNotificationBuilder logger(Logger loger){
+		this.notification.logger = loger
+		return this;
+	}
+	
 	public def PDSNotificationBuilder jobName(String jobName){
 		this.notification.job = jobName
 		return this;

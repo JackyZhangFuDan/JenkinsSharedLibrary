@@ -46,15 +46,21 @@ class PDSNotification{
 	
 	public String whenTestRun
 	
+	public Logger logger = new Logger()
+	
 	public PDSNotification(){
 		
 	}
 	
 	public boolean send(){
+		String msg = ''
 		if(!this.validate()){
-			println 'validation before sending fail, notification sending is cancelled.'
+			msg = 'validation before sending fail, notification sending is cancelled.'
+			println msg
+			this.logger.add(msg)
 			return false
 		}
+		
 		def jsonStr = JsonOutput.toJson([
 			project:this.project,
 			module:this.module,
@@ -66,7 +72,9 @@ class PDSNotification{
 			whentestrun:this.whenTestRun,
 			files:this.files
 		])
-		println 'Json data to be sent to PDS: ' + jsonStr
+		msg = 'Json data to be sent to PDS: ' + jsonStr
+		println msg
+		this.logger.add(msg)
 		
 		try{
 			this.httpsPostData(this.pdsNotificationEndPoint, jsonStr)
@@ -80,24 +88,31 @@ class PDSNotification{
 	
 	private boolean validate(){
 		if(this.pdsUsername == null || this.pdsUsername.isEmpty()){
+			this.logger.add('Notification validation fail: username isn\'t right')
 			return false
 		}
 		if(this.pdsPwd == null || this.pdsPwd.isEmpty()){
+			this.logger.add('Notification validation fail: pwd isn\'t right')
 			return false
 		}
 		if(this.project == null || this.project.isEmpty()){
+			this.logger.add('Notification validation fail: project cannot be empty.')
 			return false;
 		}
 		if(this.module == null || this.module.isEmpty()){
+			this.logger.add('Notification validation fail: module cannot be empty')
 			return false;
 		}
 		if(this.server == null || this.server.isEmpty()){
+			this.logger.add('Notification validation fail: server cannot be empty')
 			return false;
 		}
 		if(this.type == null || this.type.isEmpty()){
+			this.logger.add('Notification validation fail: notification type cannot be empty')
 			return false;
 		}
 		if(this.category == null || this.category.isEmpty()){
+			this.logger.add('Notification validation fail: category cannot be empty')
 			return false;
 		}
 		return true
@@ -105,6 +120,7 @@ class PDSNotification{
 	
 	@NonCPS
 	private def boolean httpsPostData(String url,String jsonStr) throws Exception {
+		String msg
 		
 		SSLContext sslcontext = SSLContexts.custom()
 			.loadTrustMaterial(new TrustStrategy() {
@@ -141,7 +157,9 @@ class PDSNotification{
 		
 		int respCode = response.getStatusLine().getStatusCode();
 		if(respCode < 200 || respCode >= 300){
-			println 'PDS Daemon returns non-health http code: ' + respCode
+			msg = 'PDS Daemon returns non-health http code: ' + respCode
+			println msg
+			this.logger.add(msg)
 			return false
 		}
 		
@@ -154,7 +172,9 @@ class PDSNotification{
 			EntityUtils.consume(respEntity)
 			
 			if(resp.code != 0){
-				println 'PDS Daemon rejects the notification: ' + jsonResp 
+				msg = 'PDS Daemon rejects the notification: ' + jsonResp
+				println msg
+				this.logger.add(msg) 
 				return false
 			}
 		}catch(Exception ex){

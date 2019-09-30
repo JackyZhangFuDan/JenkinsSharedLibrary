@@ -4,19 +4,21 @@ import com.lesfurets.jenkins.unit.global.lib.Library
 
 import com.sap.calm.ptm.jenkinslibrary.DownloadUtil
 import com.sap.calm.ptm.jenkinslibrary.PDSNotificationUtil
+import com.sap.calm.ptm.jenkinslibrary.Logger
 
 def execute() {
     node() {
 		String username = 'JonSnow'
 		String password = 'Solman00'
 		def notificationData = []
+		def log = new Logger()
 		
         stage("Prepare") {
             //downloadUtil = new DownloadUtil()
         }
         stage("Middle") {
             
-			def dateToBeDownloaded = new Date() - 1
+			def dateToBeDownloaded = new Date() - 4
 			List<String> result = DownloadUtil.downloadFromOtherJenkins(
 				'https://gketestpipeline.jaas-gcp.cloud.sap.corp', //server of the jenkins
 				'rc_pipeline_Master',                                    //job name
@@ -34,6 +36,7 @@ def execute() {
 	    stage('Notify PDS'){
 			for(int i = 0; i < notificationData.size; i++){
 				def notiData = notificationData.get(i)
+				if(notiData == null) continue
 				PDSNotificationUtil.notifyPDS(
 					notiData.project,
 					notiData.module,
@@ -48,8 +51,15 @@ def execute() {
 					username,
 					password,
 					
-					true
+					true,
+					log
 				)
+			}
+			List<String> msg = log.allMsgs()
+			if(msg != null && msg.size()> 0){
+				for(int i = 0 ; i < msg.size(); i++){
+					echo msg.get(i)	
+				}
 			}
 			echo 'Notification(s) is sent.'
 	    }
