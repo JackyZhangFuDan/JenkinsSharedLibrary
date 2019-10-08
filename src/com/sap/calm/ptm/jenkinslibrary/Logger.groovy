@@ -4,7 +4,10 @@ public class Logger{
 	private List<String> messages = new ArrayList<String>()
 	
 	public add(String msg){
-		this.messages.add(msg)
+		if(msg != null && !msg.isEmpty())
+			this.messages.add(msg)
+		else
+			this.messages.add('<empty msg>')
 	}
 	
 	public allMsgs(){

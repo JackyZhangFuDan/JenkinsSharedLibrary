@@ -224,11 +224,12 @@ class JenkinsDownloader{
 		}else{
 			try {
 				HttpEntity entity = response.getEntity()
-				this.logger.add(response.getStatusLine())
+				this.logger.add(response.getStatusLine().toString())
 				result = IOUtils.toString(entity.getContent())
 				EntityUtils.consume(entity)
 			}catch(Exception ex){
-				throw ex
+				this.logger.add(ex.getMessage())
+				//throw ex
 			}
 		}
 		
