@@ -103,7 +103,7 @@ class JenkinsDownloader{
 			jobJsonObject = jsonSlurper.parseText(s)
 			jobBuilds = jobJsonObject.builds
 		}catch(Exception ex){
-			this.logger.add("${ex.getMessage}. The json string: ${s}")
+			this.logger.add("${ex.getMessage()}. The json string: ${s}")
 			return downloadedFiles
 		}
 		
