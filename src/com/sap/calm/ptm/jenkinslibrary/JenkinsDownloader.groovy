@@ -71,13 +71,16 @@ class JenkinsDownloader{
 		List<String> downloadedFiles = new ArrayList<String>()
 		
 		File targetFolder = new File(folderOfCurrentWorkspace)
+		FileTreeBuilder targetFolderBuilder = new FileTreeBuilder(targetFolder)
+		targetFolder = targetFolderBuilder.dir(saveToSubFolder)
+		/*
 		if(!targetFolder.exists() || !targetFolder.isDirectory()){
 			this.logger.add("The specified target folder ${folderOfCurrentWorkspace} does not exist.")
 			return downloadedFiles
 		}else{
 			FileTreeBuilder targetFolderBuilder = new FileTreeBuilder(targetFolder)
 			targetFolder = targetFolderBuilder.dir(saveToSubFolder)
-		}
+		}*/
 		
 		//what builds the job had produced in the specified date
 		String url = jenkinsServer + '/job/' + jobName + '/api/json'
