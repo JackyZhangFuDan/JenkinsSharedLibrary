@@ -72,7 +72,7 @@ class JenkinsDownloader{
 		
 		File targetFolder = new File(folderOfCurrentWorkspace)
 		if(!targetFolder.exists() || !targetFolder.isDirectory()){
-			this.logger.add('The specified target folder does not exist.')
+			this.logger.add("The specified target folder ${folderOfCurrentWorkspace} does not exist.")
 			return downloadedFiles
 		}else{
 			FileTreeBuilder targetFolderBuilder = new FileTreeBuilder(targetFolder)
