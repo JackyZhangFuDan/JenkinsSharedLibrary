@@ -41,8 +41,6 @@ def execute() {
 				'artifact/Backend_UT_Coverage.xml'
 			)
 			notificationData.add(DownloadUtil.prepareDataForNotification('rc','sic','ut_coverage_backend','ut_nw',result, "${BUILD_URL}artifact/"))
-			echo "${result.size()} backend ut result files are downloaded"
-			
 			List<String> msg = DownloadUtil.logger.allMsgs()
 			if(msg != null && msg.size()> 0){
 				for(int i = 0 ; i < msg.size(); i++){
@@ -50,6 +48,23 @@ def execute() {
 				}
 			}
 			DownloadUtil.logger.clear()
+			echo "${result.size()} backend ut result files are downloaded"
+			
+			result = DownloadUtil.downloadFromOtherJenkins(
+				'https://gketestpipeline.jaas-gcp.cloud.sap.corp',    //server of the jenkins
+				'rc_pipeline_Master',                                 //job name
+				dateToBeDownloaded,                                   //which date's builds of this job will be downloaded
+				"${WORKSPACE}",                                       //save to which folder of the server?
+				'artifact/web/target/jscoverage/jscoverage.xml')
+			notificationData.add(DownloadUtil.prepareDataForNotification('rc','rc','ut_coverage_ui','qunit_coverage',result, "${BUILD_URL}artifact/"))
+			msg = DownloadUtil.logger.allMsgs()
+			if(msg != null && msg.size()> 0){
+				for(int i = 0 ; i < msg.size(); i++){
+					echo "-------- ${msg.get(i)}"
+				}
+			}
+			DownloadUtil.logger.clear()
+			echo "-------- ${result.size()} javascript ut coverage files are downloaded"
 			
         }
 		stage('Archive Files'){

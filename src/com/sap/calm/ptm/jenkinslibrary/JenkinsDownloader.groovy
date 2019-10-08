@@ -229,7 +229,7 @@ class JenkinsDownloader{
 				EntityUtils.consume(entity)
 			}catch(Exception ex){
 				this.logger.add(ex.getMessage())
-				//throw ex
+				throw ex
 			}
 		}
 		
