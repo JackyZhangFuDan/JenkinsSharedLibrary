@@ -80,6 +80,7 @@ class PDSNotification{
 			this.httpsPostData(this.pdsNotificationEndPoint, jsonStr)
 		}catch(Exception ex){
 			ex.printStackTrace()
+			this.logger.add("Send notification exception: ${ex.getMessage()}")
 			return false
 		}
 		
@@ -164,17 +165,19 @@ class PDSNotification{
 		}
 		
 		try {
-			println response.getStatusLine()
+			msg = response.getStatusLine()
+			this.logger.add(msg)
 			HttpEntity respEntity = response.getEntity()
 			String jsonResp = EntityUtils.toString(respEntity,"UTF-8")
 			def resp = (new JsonSlurper()).parseText(jsonResp)			
 			
 			EntityUtils.consume(respEntity)
 			
-			if(resp.code != 0){
-				msg = 'PDS Daemon rejects the notification: ' + jsonResp
-				println msg
-				this.logger.add(msg) 
+			msg = 'PDS Daemon response: ' + jsonResp
+			println msg
+			this.logger.add(msg)
+			
+			if(resp.code != 0){	 
 				return false
 			}
 		}catch(Exception ex){
