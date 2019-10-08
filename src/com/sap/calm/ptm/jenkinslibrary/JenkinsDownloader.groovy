@@ -97,8 +97,16 @@ class JenkinsDownloader{
 		}
 		
 		def jsonSlurper = new JsonSlurper()
-		def jobJsonObject = jsonSlurper.parseText(s)
-		ArrayList jobBuilds = jobJsonObject.builds
+		def jobJsonObject = null
+		ArrayList jobBuilds = null
+		try{
+			jobJsonObject = jsonSlurper.parseText(s)
+			jobBuilds = jobJsonObject.builds
+		}catch(Exception ex){
+			this.logger.add("${ex.getMessage}. The json string: ${s}")
+			return downloadedFiles
+		}
+		
 		ArrayList toBeDownloadedBuilds = new ArrayList()
 		
 		//calculates which builds to download?
