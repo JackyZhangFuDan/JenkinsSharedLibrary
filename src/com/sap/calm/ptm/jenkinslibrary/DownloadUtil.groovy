@@ -12,6 +12,7 @@ import com.sap.calm.ptm.jenkinslibrary.JenkinsDownloader
 class DownloadUtil{
 	
 	public static String DOWNLOADSUBFOLDER = 'pds_download_folder'
+	public static Logger logger = new Logger()
 	
 	/**
 	 * Download test result from other jenkins server, this is static method which can be accessed from class, so it is easy for pipeline to comsume
@@ -24,9 +25,12 @@ class DownloadUtil{
 	 * @return: URI of the downloaded file
 	 */
 	public static List<String> downloadFromOtherJenkins(String jenkinsServer, String jobName, Date date, String folderOfCurrentWorkspace, String relativePathOfToBeDownloadedFile){
-		JenkinsDownloader loader = new JenkinsDownloader(jenkinsServer,folderOfCurrentWorkspace,DOWNLOADSUBFOLDER)
+		return downloadFromOtherJenkins(jenkinsServer, jobName, date, folderOfCurrentWorkspace, relativePathOfToBeDownloadedFile, logger)
+	}
+	
+	public static List<String> downloadFromOtherJenkins(String jenkinsServer, String jobName, Date date, String folderOfCurrentWorkspace, String relativePathOfToBeDownloadedFile, Logger log){
+		JenkinsDownloader loader = new JenkinsDownloader(jenkinsServer,folderOfCurrentWorkspace,DOWNLOADSUBFOLDER, log)
 		return loader.downloadFromJenkins(jobName, date , relativePathOfToBeDownloadedFile)
-		
 	}
 	
 	/**

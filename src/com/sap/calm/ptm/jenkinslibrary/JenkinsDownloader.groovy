@@ -27,6 +27,7 @@ class JenkinsDownloader{
 	private String jenkinsServer
 	private String folderOfCurrentWorkspace
 	private String saveToSubFolder
+	private Logger logger = new Logger()
 	
 	/**
 	 * 
@@ -38,6 +39,19 @@ class JenkinsDownloader{
 		this.jenkinsServer = jenkinsServer
 		this.folderOfCurrentWorkspace = folderOfCurrentWorkspace
 		this.saveToSubFolder = saveToSubFolder
+	}
+	
+	/**
+	 *
+	 * @param jenkinsServer
+	 * @param folderOfCurrentWorkspace
+	 * @param saveToSubFolder
+	 */
+	def JenkinsDownloader(String jenkinsServer,String folderOfCurrentWorkspace, String saveToSubFolder, Logger log){
+		this.jenkinsServer = jenkinsServer
+		this.folderOfCurrentWorkspace = folderOfCurrentWorkspace
+		this.saveToSubFolder = saveToSubFolder
+		this.logger = log
 	}
 	
 	/**
@@ -58,7 +72,7 @@ class JenkinsDownloader{
 		
 		File targetFolder = new File(folderOfCurrentWorkspace)
 		if(!targetFolder.exists() || !targetFolder.isDirectory()){
-			println 'The specified target folder does not exist.'
+			this.logger.add('The specified target folder does not exist.')
 			return downloadedFiles
 		}else{
 			FileTreeBuilder targetFolderBuilder = new FileTreeBuilder(targetFolder)
@@ -71,7 +85,11 @@ class JenkinsDownloader{
 		try{
 			s = this.HttpsGetWithoutCert(url)
 		} catch( Exception ex){
-			ex.printStackTrace()
+			this.logger.add(ex.getMessage())
+			return downloadedFiles
+		}
+		if(s == null || s.isEmpty()){
+			this.logger.add( "it seems we cannot read data of job ${jobName} via api")
 			return downloadedFiles
 		}
 		
@@ -84,10 +102,13 @@ class JenkinsDownloader{
 		jobBuilds.each( { build ->
 			try{
 				s = this.HttpsGetWithoutCert(build.url + "/api/json")
-				def buildJsonObject = jsonSlurper.parseText(s)
-				def ts = new Date(buildJsonObject.timestamp)
-				if(sdf.format(ts).equals( targetDateStr) ){
-					toBeDownloadedBuilds.add(build);
+				if(s != null && !s.isEmpty()){
+					def buildJsonObject = jsonSlurper.parseText(s)
+					
+					def ts = new Date(buildJsonObject.timestamp)
+					if(sdf.format(ts).equals( targetDateStr) ){
+						toBeDownloadedBuilds.add(build);
+					}
 				}
 			}catch(Exception ex){
 			}
@@ -108,7 +129,7 @@ class JenkinsDownloader{
 			if(this.download(url, targetFolder, fileName)){
 				downloadedFiles.add(saveToSubFolder + '/' + fileName)
 			}else{
-				println "download file ${fileName} fail"
+				this.logger.add( "download file ${fileName} fail")
 			}
 		})
 		
@@ -133,7 +154,7 @@ class JenkinsDownloader{
 		try{
 			s = this.HttpsGetWithoutCert(url)
 		}catch(Exception ex){
-			ex.printStackTrace()
+			this.logger.add(ex.getMessage())
 			return false
 		}
 		if(s != null && !s.isEmpty()){
@@ -182,17 +203,17 @@ class JenkinsDownloader{
   
 		HttpGet httpget = new HttpGet(url)
 		
-		System.out.println("Executing request " + httpget.getRequestLine())
+		this.logger.add("Executing request " + httpget.getRequestLine())
 		CloseableHttpResponse response = httpclient.execute(httpget)
 		int respCode = response.getStatusLine().getStatusCode();
 		
 		String result = ""
 		if(respCode < 200 || respCode >= 300){
-			println 'Get non-health http code: ' + respCode
+			this.logger.add( 'Get non-health http code: ' + respCode )
 		}else{
 			try {
 				HttpEntity entity = response.getEntity()
-				System.out.println(response.getStatusLine())
+				this.logger.add(response.getStatusLine())
 				result = IOUtils.toString(entity.getContent())
 				EntityUtils.consume(entity)
 			}catch(Exception ex){
